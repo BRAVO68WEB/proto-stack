@@ -1,24 +1,22 @@
-import logo from './logo.svg';
+import { Box } from '@chakra-ui/react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Signup from './Pages/Signup';
+import Login from './Pages/Login';
+// import Home from './Pages/Home';
+// import PrivateRoute from "./Pages/PrivateRoute";
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box>
+      <Router>
+        <Routes>
+          <Route exact path="/signup" element={<Signup />} />
+          <Route exact path="/login" element={<Login />} />
+          {/* <Route exact path="/" element={<Home/>}/> */}
+        </Routes>
+      </Router>
+    </Box>
   );
 }
 
