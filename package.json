@@ -1,0 +1,10 @@
+{
+  "name": "Proto-stack",
+  "version": "1.0.0",
+  "description": "Proto-stack Monorepo",
+  "main": "index.js",
+  "repository": "https://github.com/BRAVO68WEB/proto-stack",
+  "author": "Dev's Nest",
+  "license": "ISC",
+  "private": true
+}
