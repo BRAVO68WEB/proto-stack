@@ -6,6 +6,7 @@ import Home from './Pages/Home';
 import PrivateRoute from "./Pages/PrivateRoute";
 import './App.css';
 import Verification from './Pages/Verification';
+import CreateBlog from './Pages/CreateBlog';
 
 function App() {
   return (
@@ -19,9 +20,13 @@ function App() {
             <PrivateRoute>
               <Home />
             </PrivateRoute>} />
+          <Route exact path="/create/blog" element={
+            <PrivateRoute>
+              <CreateBlog />
+            </PrivateRoute>} />
         </Routes>
       </Router>
-    </Box>
+    </Box >
   );
 }
 

@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Container, Text, Button } from '@chakra-ui/react';
+import { Box, Container, Text, Button, IconButton } from '@chakra-ui/react';
 import {
     Menu,
     MenuButton,
     MenuList,
     MenuItem,
 } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
+import { SettingsIcon } from '@chakra-ui/icons';
+import axios from "../helpers/axios";
 
 const Appbar = () => {
 
     const navigate = useNavigate();
+
+    const toast = useToast();
 
     // ! States
     const [currentUser, setCurrentUser] = useState(false);
@@ -21,8 +26,40 @@ const Appbar = () => {
 
     function handleLogout(e) {
         e.preventDefault();
-        localStorage.removeItem("proto-stack-token");
-        navigate("/login");
+        let data = "";
+
+        axios.post("/auth/logout")
+            .then((result) => {
+                if (result.data.status == true) {
+                    localStorage.removeItem("proto-stack-token");
+                    toast({
+                        title: 'Success.',
+                        description: result.data.message,
+                        status: 'success',
+                        duration: 9000,
+                        isClosable: true,
+                    })
+                    navigate("login");
+                }
+                else {
+                    toast({
+                        title: 'Fail.',
+                        description: result.message,
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    })
+                }
+            })
+            .catch((error) => {
+                toast({
+                    title: 'Fail.',
+                    description: "Failed to logout.",
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                })
+            });
     }
 
     return (
@@ -45,8 +82,8 @@ const Appbar = () => {
                 {currentUser &&
                     <Box ml="auto">
                         <Menu>
-                            <MenuButton as={Button}>
-                                Settings
+                            <MenuButton as={Button} icon={<SettingsIcon />}>
+                                <SettingsIcon mt="-1" />
                             </MenuButton>
                             <MenuList>
                                 <MenuItem onClick={handleLogout} color="red.500">Logout</MenuItem>
