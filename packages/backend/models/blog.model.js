@@ -19,7 +19,11 @@ const blogSchema = new mongoose.Schema({
     likes:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    likeCount: {
+        type: Number,
+        default: 0
+    }
 })
 
 const Blog = mongoose.model('Blog', blogSchema);

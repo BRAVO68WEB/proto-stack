@@ -25,7 +25,25 @@ async function CreateBlog(req, res, next) {
 
 async function GetAllBlogs(req, res, next) {
     try {
-        const blogs = await Blog.find({}).populate('author').exec();
+        req.query.page = req.query.page ?? 1;
+        let perPage = 5, page = req.query.page
+        let search = req.query.search ?? '';
+        console.log(page, perPage, search);
+        let blogs = await Blog.find({
+            $or: [
+                { title: { $regex: search } },
+                { content: { $regex: search } },
+            ]
+        }).populate('author').limit(perPage).skip(perPage * page).exec();
+        
+        blogs.map(blog => {
+            blog.author.salt = undefined;
+            blog.author.hash = undefined;
+            blog.author.address = undefined;
+            blog.author.attributes = undefined;
+            return blog;
+        })
+        
         return res.json({
             status: true,
             message: 'Blogs found.',
@@ -40,11 +58,83 @@ async function GetAllBlogs(req, res, next) {
 async function GetBlogById(req, res, next) {
     const blog_id = req.params.blog_id;
     try {
-        const blog = await Blog.findById(blog_id).populate('author').exec();
+        let blog = await Blog.findById(blog_id).populate('author').exec();
+        blogs.map(blog => {
+            blog.author.salt = undefined;
+            blog.author.hash = undefined;
+            blog.author.address = undefined;
+            blog.author.attributes = undefined;
+            return blog;
+        })
         return res.json({
             status: true,
             message: 'Blog found.',
             data: blog,
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+async function GetBlogsByAuthor(req, res, next) {
+    const author_id = req.params.author_id;
+    try {
+        let blogs = await Blog.find({author: author_id}).populate('author').exec();
+        blogs.map(blog => {
+            blog.author.salt = undefined;
+            blog.author.hash = undefined;
+            blog.author.address = undefined;
+            blog.author.attributes = undefined;
+            return blog;
+        })
+        return res.json({
+            status: true,
+            message: 'Blogs found.',
+            data: blogs,
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+async function GetBlogsByTag(req, res, next) {
+    const tag = req.params.tag;
+    try {
+        let blogs = await Blog.find({tags: tag}).populate('author').exec();
+        blogs.map(blog => {
+            blog.author.salt = undefined;
+            blog.author.hash = undefined;
+            blog.author.address = undefined;
+            blog.author.attributes = undefined;
+            return blog;
+        })
+        return res.json({
+            status: true,
+            message: 'Blogs found.',
+            data: blogs,
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+async function GetTop5Blogs(req, res, next) {
+    try {
+        let blogs = await Blog.find({}).sort({likeCount: -1}).limit(5).populate('author').exec();
+        blogs.map(blog => {
+            blog.author.salt = undefined;
+            blog.author.hash = undefined;
+            blog.author.address = undefined;
+            blog.author.attributes = undefined;
+            return blog;
+        })
+        return res.json({
+            status: true,
+            message: 'Top 5 blogs found.',
+            data: blogs,
         });
     }
     catch (err) {
@@ -131,7 +221,8 @@ async function RateBlog(req, res, next) {
         else {
             likes.push(user_id);
         }
-        const updatedBlog = await Blog.findByIdAndUpdate(blog_id, { likes: likes }, { new: true }).exec();
+        const likeCount = likes.length;
+        const updatedBlog = await Blog.findByIdAndUpdate(blog_id, { likes: likes, likeCount: likeCount}, { new: true }).exec();
         return res.json({
             status: true,
             message: 'Blog liked.',
@@ -150,4 +241,7 @@ module.exports = {
     UpdateBlog,
     DeleteBlog,
     RateBlog,
+    GetTop5Blogs,
+    GetBlogsByAuthor,
+    GetBlogsByTag,
 }
