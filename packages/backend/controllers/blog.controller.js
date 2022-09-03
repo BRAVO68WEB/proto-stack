@@ -31,8 +31,8 @@ async function GetAllBlogs(req, res, next) {
         console.log(page, perPage, search);
         let blogs = await Blog.find({
             $or: [
-                { title: { $regex: search } },
-                { content: { $regex: search } },
+                { title: { $regex: search, $options: 'i' } },
+                { content: { $regex: search, $options: 'i' } },
             ]
         }).populate('author').limit(perPage).skip(perPage * page).exec();
         
