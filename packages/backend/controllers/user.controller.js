@@ -22,11 +22,16 @@ async function GetUserByUsername(req, res, next) {
     const username = req.params.username
 
     try {
-        const user = await User.findOne({
+        let user = await User.findOne({
             username: username,
         }).exec()
 
         if (user === null) throw new Error('User not found')
+
+        user.salt = undefined;
+        user.hash = undefined;
+        user.address = undefined;
+        user.attributes = undefined;
 
         return res.json({
             status: true,
@@ -40,9 +45,17 @@ async function GetUserByUsername(req, res, next) {
 
 async function GetAllUsers(_req, res, next) {
     try {
-        const users = await User.find().exec()
+        let users = await User.find().exec()
 
         if (users === null) throw new Error('User not found')
+
+        users.map(user => {
+            user.salt = undefined;
+            user.hash = undefined;
+            user.address = undefined;
+            user.attributes = undefined;
+            return user;
+        })
 
         return res.json({
             status: true,

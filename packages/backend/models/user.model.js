@@ -49,6 +49,10 @@ const userSchema = new mongoose.Schema({
             default: '',
         },
     },
+    profile_picture: {
+        type: String,
+        default: 'https://s3.b68web.xyz/proto-stack/default.jpeg',
+    },
     birthday: {
         type: Date,
         default: Date.now,

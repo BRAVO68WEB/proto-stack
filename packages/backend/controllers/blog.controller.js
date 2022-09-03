@@ -48,6 +48,11 @@ async function GetAllBlogs(req, res, next) {
             status: true,
             message: 'Blogs found.',
             data: blogs,
+            metadata: {
+                page: page,
+                perPage: perPage,
+                totalPage: Math.ceil(await Blog.countDocuments() / perPage),
+            }
         });
     }
     catch (err) {
