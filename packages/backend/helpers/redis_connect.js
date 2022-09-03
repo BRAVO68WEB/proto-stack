@@ -1,7 +1,10 @@
 const redis = require('redis')
 
 const redis_client = redis.createClient(
-    `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`
+    {
+        url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`,
+        connect_timeout: 0
+    }
 )
 
 redis_client.on('connect', function () {

@@ -1,7 +1,7 @@
-async function notFound(_req, _res, next) {
+async function notFound(_req, res, next) {
     return res.status(404).send({
         status: false,
-        message: err.message,
+        message: "Not Found",
     })
 }
 

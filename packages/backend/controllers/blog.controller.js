@@ -2,7 +2,7 @@ const Blog = require('../models/blog.model');
 
 async function CreateBlog(req, res, next) {
     const blogData = req.body;
-    const user_id = req.userData.user_id;
+    const user_id = req.userData.user;
 
     try {
         const blog = await Blog.create({
@@ -62,7 +62,7 @@ async function UpdateBlog(req, res, next) {
             message: 'Blog not found.',
         });
     }
-    if (req.userData.user_id !== blogToUpdate.author) {
+    if (req.userData.id !== blogToUpdate.author) {
         return res.json({
             status: false,
             message: 'You are not the author of this blog.',
@@ -101,7 +101,7 @@ async function DeleteBlog(req, res, next) {
             message: 'Blog not found.',
         });
     }
-    if (req.userData.user_id !== blogToDelete.author) {
+    if (req.userData.id !== blogToDelete.author) {
         return res.json({
             status: false,
             message: 'You are not the author of this blog.',
@@ -121,7 +121,7 @@ async function DeleteBlog(req, res, next) {
 
 async function RateBlog(req, res, next) {
     const blog_id = req.params.blog_id;
-    const user_id = req.userData.user_id;
+    const user_id = req.userData.user;
     try {
         const blog = await Blog.findById(blog_id).exec();
         const likes = blog.likes;
