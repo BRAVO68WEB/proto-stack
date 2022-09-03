@@ -59,13 +59,11 @@ async function GetBlogById(req, res, next) {
     const blog_id = req.params.blog_id;
     try {
         let blog = await Blog.findById(blog_id).populate('author').exec();
-        blogs.map(blog => {
+
             blog.author.salt = undefined;
             blog.author.hash = undefined;
             blog.author.address = undefined;
             blog.author.attributes = undefined;
-            return blog;
-        })
         return res.json({
             status: true,
             message: 'Blog found.',
