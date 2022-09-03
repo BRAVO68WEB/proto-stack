@@ -16,12 +16,12 @@ const Appbar = () => {
     const [currentUser, setCurrentUser] = useState(false);
 
     useEffect(() => {
-        setCurrentUser(JSON.parse(localStorage.getItem("anime-facts-jwt-token")));
+        setCurrentUser(JSON.parse(localStorage.getItem("proto-stack-jwt")));
     }, [])
 
     function handleLogout(e) {
         e.preventDefault();
-        localStorage.removeItem("anime-facts-jwt-token");
+        localStorage.removeItem("proto-stack-token");
         navigate("/login");
     }
 

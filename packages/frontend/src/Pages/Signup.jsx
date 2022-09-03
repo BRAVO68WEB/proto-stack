@@ -25,20 +25,10 @@ import {
 import { useToast } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
 import Appbar from '../Components/Appbar';
+import axios from "../helpers/axios";
+// import axios? from "axios";
 
 const Signup = () => {
-
-    //! API_URL variable
-    let API_URL;
-
-    //! Set API_URL based on env
-
-    if (process.env.NODE_ENV !== 'production') {
-        API_URL = process.env.REACT_APP_DEV_API_URL;
-    }
-    else {
-        API_URL = process.env.REACT_APP_PROD_API_URL;
-    }
 
     const navigate = useNavigate();
 
@@ -75,44 +65,33 @@ const Signup = () => {
                 setBtnText("Signup");
             }
             else {
-                let myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
-
-                var raw = JSON.stringify({
-                    "username": userName.current.value,
+                let data = {
+                    "username": userNameRef.current.value,
                     "first_name": firstNameRef.current.value,
                     "last_name": firstNameRef.current.value,
                     "email": emailRef.current.value,
                     "password": passwordRef.current.value
-                });
-
-                let requestOptions = {
-                    method: 'POST',
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: 'follow'
                 };
 
-                fetch(`${API_URL}/users/signup`, requestOptions)
-                    .then(response => response.json())
+                axios.post("/auth/register", data)
                     .then((result) => {
-                        if (result.status === "success") {
-                            // console.log(result);
-                            localStorage.setItem("anime-facts-jwt-token", JSON.stringify(result.data.token));
+                        console.log(result.data)
+                        if (result.data.status == true) {
+                            console.log(result);
                             toast({
-                                title: 'Account created.',
-                                description: "We've created your account for you.",
+                                title: result.data.status,
+                                description: result.data.message,
                                 status: 'success',
                                 duration: 9000,
                                 isClosable: true,
                             })
-                            navigate("/");
+                            navigate("/verification");
                         }
                         else {
                             setBtnText("Signup");
                             toast({
-                                title: 'Failed to create account.',
-                                description: result.message,
+                                title: result.data.status,
+                                description: result.data.message,
                                 status: 'error',
                                 duration: 9000,
                                 isClosable: true,
@@ -120,7 +99,6 @@ const Signup = () => {
                         }
                     })
                     .catch((error) => {
-                        // console.log('error', error);
                         setBtnText("Signup");
                         toast({
                             title: 'Failed to create account.',
@@ -139,24 +117,24 @@ const Signup = () => {
         <Box>
             <Appbar />
             <Container maxW="container.xl">
-                <Center mt={["30%", "25%", "10%"]}>
-                    <Box>
+                <Center mt={["30%", "25%", "5%"]}>
+                    <Box w={["90%", "30%", "30%"]}>
                         <form onSubmit={handleSubmit}>
                             <Text fontSize="2xl"
                                 fontWeight="500">
                                 Create Account
                             </Text>
 
-                            <Input ref={firstNameRef} mt="6" placeholder='First Name' size='lg'
-                                type="text" required />
-                                
-                            <Input ref={firstNameRef} mt="6" placeholder='First Name' size='lg'
+                            <Input ref={userNameRef} mt="6" placeholder='Username' size='lg'
                                 type="text" required />
 
-                            <Input ref={lastNameRef} mt="6" placeholder='Last Name' size='lg'
+                            <Input ref={firstNameRef} mt="3" placeholder='First Name' size='lg'
                                 type="text" required />
 
-                            <Input ref={emailRef} mt="6" placeholder='email' size='lg'
+                            <Input ref={lastNameRef} mt="3" placeholder='Last Name' size='lg'
+                                type="text" required />
+
+                            <Input ref={emailRef} mt="3" placeholder='email' size='lg'
                                 type="email" required />
 
                             <InputGroup size='md' mt='3'>

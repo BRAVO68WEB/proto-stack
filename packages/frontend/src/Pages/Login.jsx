@@ -11,20 +11,10 @@ import {
 } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react';
 import Appbar from '../Components/Appbar';
+import axios from "../helpers/axios";
+// import axios from "axios";
 
 const Login = () => {
-
-    //! API_URL variable
-    let API_URL;
-
-    //! Set API_URL based on env
-
-    if (process.env.NODE_ENV !== 'production') {
-        API_URL = process.env.REACT_APP_DEV_API_URL;
-    }
-    else {
-        API_URL = process.env.REACT_APP_PROD_API_URL;
-    }
 
     const navigate = useNavigate();
 
@@ -35,7 +25,7 @@ const Login = () => {
     const [btnText, setBtnText] = useState("Login");
 
     // ! useRef
-    const emailRef = useRef();
+    const userNameRef = useRef();
     const passwordRef = useRef();
 
     // ! Function to handle show and hide password, Chakra UI
@@ -45,27 +35,18 @@ const Login = () => {
         e.preventDefault();
         setBtnText("Logging in...");
 
-        let myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        let raw = JSON.stringify({
-            "email": emailRef.current.value,
+        let data = {
+            "username": userNameRef.current.value,
             "password": passwordRef.current.value
-        });
-
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
         };
 
-        fetch(`${API_URL}/users/login`, requestOptions)
-            .then(response => response.json())
+        axios.post("/auth/login", data)
             .then((result) => {
-                if (result.status === "success") {
-                    // console.log(result);
-                    localStorage.setItem("anime-facts-jwt-token", JSON.stringify(result.data.token));
+                console.log(result);
+                if (result.data.status == true) {
+                    console.log(result);
+                    // localStorage.setItem("proto-stack-jwt", JSON.stringify(result.data.token));
+                    localStorage.setItem("proto-stack-jwt", JSON.stringify(result.data.data.access_token));
                     toast({
                         title: 'Login complete.',
                         description: "Logged in successfully.",
@@ -111,8 +92,8 @@ const Login = () => {
                                 Login to continue
                             </Text>
 
-                            <Input ref={emailRef} mt="6" placeholder='Email' size='lg'
-                                type="email" required />
+                            <Input ref={userNameRef} mt="6" placeholder='Email' size='lg'
+                                type="text" required />
 
                             <InputGroup size='md' mt='3'>
                                 <Input
