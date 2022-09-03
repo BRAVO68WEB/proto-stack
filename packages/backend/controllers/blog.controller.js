@@ -11,6 +11,12 @@ async function CreateBlog(req, res, next) {
             author: user_id,
             tags: blogData.tags,
         });
+        blog.save();
+        return res.json({
+            status: true,
+            message: 'Blog created.',
+            data: blog,
+        });
     }
     catch (err) {
         next(err);

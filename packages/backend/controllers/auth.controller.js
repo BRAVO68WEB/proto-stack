@@ -7,7 +7,7 @@ const {
 const Mailer = require('../services/mail.service')
 
 async function Register(req, res, next) {
-    // encrypt password
+
     const checkIfUsernameExists = await User.findOne({
         username: req.body.username,
     }).exec()
@@ -16,10 +16,7 @@ async function Register(req, res, next) {
     }).exec()
 
     if (checkIfUsernameExists !== null || checkIfEmailExists !== null){
-        return res.json({
-            status: false,
-            message: 'Username or Email already exists.',
-        });
+        throw new Error('Username or Email already exists')
     }
 
     const user = new User({

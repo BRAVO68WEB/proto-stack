@@ -1,15 +1,14 @@
 async function notFound(_req, _res, next) {
-    try {
-        throw new Error('Not Found')
-    } catch (err) {
-        next(err)
-    }
+    return res.status(404).send({
+        status: false,
+        message: err.message,
+    })
 }
 
 async function logErrors(err, _req, _res, next) {
     console.error('\n')
     console.log('------------Error Log------------')
-    console.error(err.stack)
+    console.error(err.message)
     console.log('---------------------------------')
     next(err)
 }
