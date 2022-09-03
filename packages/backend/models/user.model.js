@@ -9,10 +9,6 @@ const userSchema = new mongoose.Schema({
         min: 6,
         max: 255,
     },
-    password: {
-        type: String,
-        require: true,
-    },
     email: {
         type: String,
         require: true,
@@ -29,26 +25,33 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
+        default: '',
     },
     address: {
         street: {
             type: String,
+            default: '',
         },
         city: {
             type: String,
+            default: '',
         },
         state: {
             type: String,
+            default: '',
         },
         zip: {
             type: String,
+            default: '',
         },
         country: {
             type: String,
+            default: '',
         },
     },
     birthday: {
         type: Date,
+        default: Date.now,
     },
     salt: {
         type: String,
@@ -71,7 +74,7 @@ const userSchema = new mongoose.Schema({
         },
         isActive: {
             type: Boolean,
-            default: false,
+            default: true,
         },
         isDeleted: {
             type: Boolean,
