@@ -12,7 +12,6 @@ import {
 import { useToast } from '@chakra-ui/react';
 import Appbar from '../Components/Appbar';
 import axios from "../helpers/axios";
-// import axios from "axios";
 
 const Login = () => {
 

@@ -86,6 +86,9 @@ const Appbar = () => {
                                 <SettingsIcon mt="-1" />
                             </MenuButton>
                             <MenuList>
+                                <Link to="user/profile">
+                                    <MenuItem color="red.500">Profile</MenuItem>
+                                </Link>
                                 <MenuItem onClick={handleLogout} color="red.500">Logout</MenuItem>
                             </MenuList>
                         </Menu>

@@ -7,6 +7,8 @@ import PrivateRoute from "./Pages/PrivateRoute";
 import './App.css';
 import Verification from './Pages/Verification';
 import CreateBlog from './Pages/CreateBlog';
+import Profile from './Pages/Profile';
+import Blog from './Pages/Blog';
 
 function App() {
   return (
@@ -23,6 +25,14 @@ function App() {
           <Route exact path="/create/blog" element={
             <PrivateRoute>
               <CreateBlog />
+            </PrivateRoute>} />
+          <Route exact path="/user/profile" element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>} />
+          <Route exact path="/blog/:id" element={
+            <PrivateRoute>
+              <Blog />
             </PrivateRoute>} />
         </Routes>
       </Router>
