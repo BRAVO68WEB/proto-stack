@@ -25,7 +25,7 @@ async function CreateBlog(req, res, next) {
 
 async function GetAllBlogs(req, res, next) {
     try {
-        req.query.page = req.query.page ?? 1;
+        req.query.page = req.query.page ?? 0;
         let perPage = 5, page = req.query.page
         let search = req.query.search ?? '';
         console.log(page, perPage, search);
