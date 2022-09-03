@@ -20,12 +20,14 @@ function verifyToken(req, _res, next) {
 
         req.token = token
 
-        // verify blacklisted access token.
         redis_client.get('BL_' + decoded.user.toString(), (err, data) => {
-            if (err) throw err
-
-            if (data === token) throw new Error('Blacklisted token')
-            next()
+            try {
+                if (err) throw err
+                if (data === token) throw new Error('Blacklisted token')
+                next()
+            } catch (error) {
+                next(error)
+            }
         })
     } catch (error) {
         next(error)
@@ -41,16 +43,20 @@ function verifyRefreshToken(req, _res, next) {
         req.userData = decoded
         if (decoded.tokenType !== 'refresh_token')
             throw new Error('Invalid token.')
-        // verify if token is in store or not
         redis_client.get(decoded.user.toString(), (err, data) => {
-            if (err) throw err
+            try {
+                if (err) throw err
 
-            if (data === null)
-                throw new Error('Invalid request :- Token is not in store')
-            if (JSON.parse(data).token != token)
-                throw new Error('Invalid request :- Token is not in store')
+                if (data === null)
+                    throw new Error('Invalid request :- Token is not in store')
+                if (JSON.parse(data).token != token)
+                    throw new Error('Invalid request :- Token is not in store')
 
-            next()
+                next()
+            }
+            catch (error) {
+                next(error)
+            }            
         })
     } catch (error) {
         next(error)
