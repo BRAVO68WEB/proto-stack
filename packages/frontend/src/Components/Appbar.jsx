@@ -21,7 +21,7 @@ const Appbar = () => {
     const [currentUser, setCurrentUser] = useState(false);
 
     useEffect(() => {
-        setCurrentUser(JSON.parse(localStorage.getItem("proto-stack-jwt")));
+        setCurrentUser(localStorage.getItem("proto-stack-jwt"));
     }, [])
 
     function handleLogout(e) {

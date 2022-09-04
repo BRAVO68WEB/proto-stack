@@ -1,18 +1,32 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Container, Box, Button } from "@chakra-ui/react";
+import { Container, Box, Button, Input } from "@chakra-ui/react";
 import { useToast } from '@chakra-ui/react';
 import CKeditor from "../Components/CKEditor";
 import Appbar from "../Components/Appbar";
 import { htmlToText } from "html-to-text";
 import parse from "html-react-parser";
-import axios from '../helpers/axios';
+import axios from 'axios';
 
 const CreateBlog = () => {
+
+    let baseURL;
+
+    if (process.env.NODE_ENV !== 'production') {
+        baseURL = process.env.REACT_APP_DEV_API_URL;
+        console.log(baseURL);
+    }
+    else {
+        baseURL = process.env.REACT_APP_PROD_API_URL;
+        console.log(baseURL);
+    }
 
     const [editorLoaded, setEditorLoaded] = useState(false);
     const [data, setData] = useState("");
     const [btnText, setBtnText] = useState("Submit");
+
+    const titleRef = useRef();
+    const tagsRef = useRef();
 
     const navigate = useNavigate();
 
@@ -23,13 +37,28 @@ const CreateBlog = () => {
     }, []);
 
     function handleSubmit(e) {
+        const tags = tagsRef.current.value.split(" ");
         e.preventDefault();
         console.log(JSON.stringify(data));
+
         let raw = {
-            "content": parse(data),
+            "content": data,
+            "title": titleRef.current.value,
+            "tags": tags
         };
 
-        axios.post("/blog/create", raw)
+        let config = {
+            method: 'post',
+            url: `${baseURL}/blog/create`,
+            headers: {
+                'Authorization': `Bearer ` + localStorage.getItem("proto-stack-jwt"),
+                'Content-Type': 'application/json'
+            },
+            data: raw
+        };
+        console.log(config)
+
+        axios(config)
             .then((result) => {
                 console.log(result);
                 if (result.data.status == true) {
@@ -55,7 +84,7 @@ const CreateBlog = () => {
                 }
             })
             .catch((error) => {
-                // console.log('error', error);
+                console.log('error', error);
                 setBtnText("Submit");
                 toast({
                     title: 'Failed to Submit.',
@@ -72,6 +101,10 @@ const CreateBlog = () => {
             <Appbar />
             <Container my="16" maxW="container.lg">
                 <form onSubmit={handleSubmit}>
+                    <Input ref={titleRef} mb="4" placeholder='Blog title should go here' />
+
+                    <Input ref={tagsRef} mb="4" placeholder='Enter tags seperated by spaces' />
+
                     <CKeditor
                         name="description"
                         onChange={(data) => {

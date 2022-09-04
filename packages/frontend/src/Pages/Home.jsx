@@ -7,6 +7,17 @@ import axios from "../helpers/axios"
 
 const Home = () => {
 
+    let baseURL;
+
+    if (process.env.NODE_ENV !== 'production') {
+        baseURL = process.env.REACT_APP_DEV_API_URL;
+        console.log(baseURL);
+    }
+    else {
+        baseURL = process.env.REACT_APP_PROD_API_URL;
+        console.log(baseURL);
+    }
+
     // ! tags
     const tags = ["frontend", "backend", "aws", "rust", "graphql", "react", "interview", "scalability", "javascript"]
     // ! states
@@ -32,8 +43,27 @@ const Home = () => {
                 console.log(error);
                 setLoading(false);
             });
+
+        getCurrentUser();
     }, [])
 
+    function getCurrentUser() {
+        let config = {
+            method: 'get',
+            url: `${baseURL}/user/me`,
+            headers: {
+                'Authorization': `Bearer ` + localStorage.getItem("proto-stack-jwt"),
+            }
+        };
+
+        axios(config)
+            .then((result) => {
+                localStorage.setItem("proto-stack-user-id", result.data.data._id);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     // ! useRefs
     const keyWordRef = useRef();
@@ -130,15 +160,13 @@ const Home = () => {
                                     <Container maxW="container.lg">
                                         <Box boxShadow="md" py="6" px="12" my="10">
                                             <Box fontSize="2xl" fontWeight="500">
-                                                This is the title of the blog
+                                                {blogs.title}
                                             </Box>
                                             <Box mt="3" fontSize="sm">
-                                                By - Elon Musk
+                                                By - {blogs.author.username}
                                             </Box>
                                             <Box mt="4" fontSize="lg">
-                                                Hello LeetCoders! We are excited to annouce that our BiWeekly
-                                                Contest 86 is sponsored by Airtel! 😎 Register for our upcoming
-                                                contest here and fill out the form at registration
+                                                {blogs.content}
                                             </Box>
                                         </Box>
                                     </Container>

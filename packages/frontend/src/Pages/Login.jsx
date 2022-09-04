@@ -43,9 +43,8 @@ const Login = () => {
             .then((result) => {
                 console.log(result);
                 if (result.data.status == true) {
-                    console.log(result);
                     // localStorage.setItem("proto-stack-jwt", JSON.stringify(result.data.token));
-                    localStorage.setItem("proto-stack-jwt", JSON.stringify(result.data.data.access_token));
+                    localStorage.setItem("proto-stack-jwt", result.data.data.access_token);
                     toast({
                         title: 'Login complete.',
                         description: "Logged in successfully.",
