@@ -12,7 +12,14 @@ const err_routes = require('./utils/errorHandler.utils')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('tiny'))
-app.use(cors())
+app.use(cors(
+    {
+        origin: "*",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        preflightContinue: false,
+        optionsSuccessStatus: 204
+    }
+))
 
 // Connect to MongoDB and Config Checking
 ;(async () => {
@@ -37,6 +44,7 @@ fs.readdirSync('./routes/').forEach(function (file) {
 console.log('Loaded all routes 🎩 ...')
 
 app.use('*', err_routes.notFound)
+
 app.use(err_routes.logErrors)
 app.use(err_routes.clientErrorHandler)
 app.use(err_routes.errorHandler)

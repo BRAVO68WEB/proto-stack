@@ -7,7 +7,7 @@ const {
 const Mailer = require('../services/mail.service')
 
 async function Register(req, res, next) {
-    // encrypt password
+
     const checkIfUsernameExists = await User.findOne({
         username: req.body.username,
     }).exec()
@@ -15,23 +15,15 @@ async function Register(req, res, next) {
         email: req.body.email,
     }).exec()
 
-    if (checkIfUsernameExists !== null || checkIfEmailExists !== null)
+    if (checkIfUsernameExists !== null || checkIfEmailExists !== null){
         throw new Error('Username or Email already exists')
+    }
 
     const user = new User({
         username: req.body.username,
         first_name: req.body.first_name,
         last_name: req.body.last_name,
-        email: req.body.email,
-        phone: req.body.phone,
-        address: {
-            street: req.body.address,
-            city: req.body.city,
-            state: req.body.state,
-            zip: req.body.zip,
-            country: req.body.country,
-        },
-        birthday: req.body.birthday,
+        email: req.body.email
     })
 
     user.setPassword(req.body.password)
@@ -44,14 +36,21 @@ async function Register(req, res, next) {
             subject: 'Welcome to the app',
             text: `Welcome to the app, ${saved_user.username}`,
         })
+        
+        delete saved_user.hash
+        delete saved_user.salt
+        delete saved_user.attributes.emailVerificationToken
+        delete saved_user.email
+        delete saved_user.__v
+        delete saved_user._id
 
         res.json({
             status: true,
             message: 'Registered successfully.',
             data: saved_user,
         })
+
     } catch (error) {
-        // do logging in DB or file.
         next(error)
     }
 }
