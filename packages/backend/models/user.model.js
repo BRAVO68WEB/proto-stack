@@ -85,6 +85,8 @@ const userSchema = new mongoose.Schema({
             default: false,
         },
     },
+},{
+    timestamps: true
 })
 
 userSchema.methods.setPassword = function (password) {
