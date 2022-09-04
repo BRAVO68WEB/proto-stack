@@ -1,6 +1,6 @@
 # jwt-auth-nodejs
 
-ProtoStack Backend
+ProtoStack Backend API Microservice
 
 [![imgshields](https://img.shields.io/badge/Version-3-yellowgreen?style=for-the-badge)](https://shields.io/)
 [![imgshields](<https://img.shields.io/badge/NodeJS-16(JS)-yellow?style=for-the-badge>)](https://shields.io/)

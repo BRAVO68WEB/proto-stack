@@ -6,5 +6,18 @@
   "repository": "https://github.com/BRAVO68WEB/proto-stack",
   "author": "Dev's Nest",
   "license": "ISC",
-  "private": true
+  "private": true,
+  "scripts": {
+    "install:frontend": "cd packages/frontend && yarn install",
+    "install:backend": "cd packages/backend && yarn install",
+    "preinstall": "yarn install:frontend && yarn install:backend",
+    "dev": "concurrently \"cd packages/frontend && npm run start\" \"cd packages/backend && npm run dev\""
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "concurrently": "^7.3.0",
+    "nodemon": "^2.0.19"
+  }
 }
