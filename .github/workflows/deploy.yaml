@@ -1,0 +1,22 @@
+name: Deploy backend on Push
+
+on: 
+  push: 
+    branches: 'main'
+
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  SSH_IP: ${{ secrets.SSH_IP }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+
+jobs:
+  deploy_prod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${SSH_USER}@${SSH_IP} '
+            cd proto-stack && ./updatebackend.sh
+          '
