@@ -1,0 +1,10 @@
+version: 3
+services:
+  api:
+    context:
+      dockerfile: Dockerfile
+      target: api
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app

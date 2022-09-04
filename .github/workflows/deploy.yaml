@@ -18,5 +18,5 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${SSH_USER}@${SSH_IP} '
-            cd proto-stack && ./updatebackend.sh
+            ./updatebackend.sh
           '
